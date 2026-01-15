@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual do Usuário - SCFV</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            color: #16a085;
+            margin-top: 20px;
+        }
+
+        h4 {
+            color: #e67e22;
+            margin-bottom: 5px;
+        }
+
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            color: #e83e8c;
+        }
+
+        ul {
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .alert {
+            background-color: #e8f6f3;
+            color: #0e6251;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #1abc9c;
+            margin-top: 20px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            a {
+                text-decoration: none;
+                color: #000;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="no-print"
+        style="background: #e1f5fe; padding: 15px; border-radius: 5px; margin-bottom: 30px; border: 1px solid #b3e5fc; text-align: center;">
+        <strong>🖨️ Para Gerar o PDF:</strong> Pressione <kbd>Ctrl + P</kbd> e escolha "Salvar como PDF".
+    </div>
+
+    <h1>📖 Manual do Usuário - Sistema SCFV</h1>
+    <p>Bem-vindo ao manual de operações do Sistema de Cadastro do SCFV. Este documento explica como utilizar as
+        principais funcionalidades, incluindo o novo sistema de gerenciamento de usuários.</p>
+
+    <h2>🔑 Acesso ao Sistema</h2>
+
+    <h3>Endereço</h3>
+    <p>Para acessar o sistema, abra o navegador e digite:<br>
+        <code>http://localhost:3000</code>
+    </p>
+
+    <h3>Login Administrativo</h3>
+    <p>Para acessar o painel de controle, use o botão "Área Administrativa" no rodapé ou acesse:<br>
+        <code>http://localhost:3000/login</code>
+    </p>
+
+    <div class="alert">
+        <strong>Credenciais Padrão:</strong><br>
+        <ul>
+            <li><strong>Usuário:</strong> admin</li>
+            <li><strong>Senha:</strong> admin123</li>
+        </ul>
+    </div>
+
+    <h2>👥 Gerenciamento de Usuários (Novo!)</h2>
+    <p>O sistema agora possui uma janela exclusiva para gerenciar quem pode acessar a área administrativa.</p>
+
+    <h3>Como Acessar</h3>
+    <ol>
+        <li>Faça login no Painel Administrativo.</li>
+        <li>No menu de abas, clique no botão <strong>"👥 Gerenciar Usuários"</strong> (canto superior direito).</li>
+        <li>Uma nova janela (popup) será aberta.</li>
+    </ol>
+
+    <h3>Funcionalidades</h3>
+
+    <h4>1. Criar Novo Usuário</h4>
+    <ol>
+        <li>Clique no botão azul <strong>"+ Novo Usuário"</strong>.</li>
+        <li>Preencha os dados:
+            <ul>
+                <li><strong>Usuário:</strong> Nome para login (sem espaços).</li>
+                <li><strong>Senha:</strong> Senha de acesso.</li>
+                <li><strong>Perfil:</strong>
+                    <ul>
+                        <li><code>Administrador</code>: Acesso total (inclui gerenciar usuários e deletar cadastros).
+                        </li>
+                        <li><code>Operador</code>: Apenas visualiza cadastros e imprime fichas.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>Clique em "Criar".</li>
+    </ol>
+
+    <h4>2. Editar Usuário</h4>
+    <ol>
+        <li>Na lista de usuários, clique no <strong>ícone de lápis (✏️)</strong> ao lado do nome.</li>
+        <li>Você pode alterar:
+            <ul>
+                <li>O perfil de acesso.</li>
+                <li>A senha (digite a nova senha ou deixe em branco para manter a atual).</li>
+            </ul>
+        </li>
+        <li>Clique em "Salvar Alterações".<br>
+            <em>*Nota: Não é possível alterar o nome de usuário (ID).</em>
+        </li>
+    </ol>
+
+    <h4>3. Tipos de Armazenamento</h4>
+    <p>Os dados dos usuários são salvos em um arquivo Excel no servidor:<br>
+        📂 <code>data/users.xlsx</code><br>
+        Isso permite que você tenha um backup fácil das credenciais.</p>
+
+    <hr>
+
+    <h2>📊 Painel de Controle (Dashboard)</h2>
+    <p>O painel principal permite visualizar todos os cadastros feitos.</p>
+
+    <h3>Abas de Atividades</h3>
+    <p>Navegue entre as abas (Hitbox, Ballet, etc.) para ver as listas específicas de cada modalidade.</p>
+
+    <h3>Ações nos Cadastros</h3>
+    <p>Em cada linha da tabela, você encontra botões de ação:</p>
+    <ul>
+        <li>🖨️ <strong>Imprimir:</strong> Gera uma ficha PDF pronta para impressão.</li>
+        <li>✏️ <strong>Editar:</strong> Permite corrigir dados do cadastro.</li>
+        <li>🗑️ <strong>Excluir:</strong> Remove o cadastro (Apenas Administradores).</li>
+    </ul>
+
+    <h3>Exportação</h3>
+    <p><strong>Baixar Excel Completo:</strong> No topo da página, este botão baixa um arquivo <code>.xlsx</code>
+        contendo TODOS os cadastros de todas as atividades, organizados por abas, ideal para relatórios.</p>
+
+    <hr>
+
+    <h2>❓ Resolução de Problemas Comuns</h2>
+
+    <h4>"O botão não funciona / Nada acontece"</h4>
+    <p>Se o sistema foi atualizado recentemente, seu navegador pode estar usando uma memória antiga (cache).<br>
+        <strong>Solução:</strong>
+    </p>
+    <ol>
+        <li>Na página com problema, pressione as teclas <code>Ctrl</code> + <code>F5</code> juntas.</li>
+        <li>Isso forçará o navegador a baixar a versão mais nova do sistema.</li>
+    </ol>
+
+    <h4>"Não consigo acessar a gestão de usuários"</h4>
+    <p>Verifique se você é um Administrador. Operadores não veem o botão de gerenciamento de usuários.</p>
+
+    <h4>"Esqueci a senha do admin"</h4>
+    <p>Como os dados estão em Excel (<code>data/users.xlsx</code>), um técnico pode abrir esse arquivo no servidor e
+        visualizar/resetar as senhas manualmente se necessário.</p>
+
+    <div class="footer">
+        © 2026 - Secretaria de Assistência Social - Santo Amaro do Maranhão
+    </div>
+
+    <script>
+        // Auto-print prompt on load
+        window.onload = function () {
+            // setTimeout(function() { window.print(); }, 1000);
+        };
+    </script>
+</body>
+
+</html>

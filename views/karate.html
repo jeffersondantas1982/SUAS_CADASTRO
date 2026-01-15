@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Karatê | SCFV</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Voltar para página inicial</a>
+
+        <div class="header">
+            <div class="header-content">
+                <img src="/img/logo_trans.png" alt="Logo SEMASCJ" class="header-logo">
+                <h1>Cadastro - Karatê</h1>
+            </div>
+            <p>Preencha o formulário abaixo para se inscrever nas aulas de Karatê</p>
+        </div>
+
+        <div class="card">
+            <form id="cadastroForm" onsubmit="submitForm(event, 'karate')">
+                <div class="form-group">
+                    <label for="email" class="required">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nome" class="required">Nome do Usuário</label>
+                    <input type="text" id="nome" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="idade" class="required">Idade</label>
+                    <input type="number" id="idade" class="form-control" min="1" max="120" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="rg" class="required">RG</label>
+                    <input type="text" id="rg" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataExpedicao">Data de Expedição do RG</label>
+                    <input type="date" id="dataExpedicao" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="dataNascimento" class="required">Data de Nascimento</label>
+                    <input type="date" id="dataNascimento" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cpf" class="required">CPF</label>
+                    <input type="text" id="cpf" class="form-control" maxlength="14" required>
+                    <small class="text-muted">Formato: 000.000.000-00</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="nis" class="required">NIS (Número de Inscrição Social)</label>
+                    <input type="text" id="nis" class="form-control" maxlength="11" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefone" class="required">Telefone de Contato</label>
+                    <input type="tel" id="telefone" class="form-control" maxlength="15" required>
+                    <small class="text-muted">Formato: (00) 00000-0000</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Incluso em algum programa social ou benefício?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="programaSim" name="programaSocial" value="SIM" required>
+                            <label for="programaSim">SIM</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="programaNao" name="programaSocial" value="NÃO" required>
+                            <label for="programaNao">NÃO</label>
+                        </div>
+                    </div>
+
+                    <div id="descricaoProgramaField" class="conditional-field" style="display: none;">
+                        <label for="descricaoPrograma">Descreva o programa ou benefício</label>
+                        <input type="text" id="descricaoPrograma" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required">Possui alguma deficiência ou limitação?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="deficienciaSim" name="possuiDeficiencia" value="SIM" required>
+                            <label for="deficienciaSim">SIM</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="deficienciaNao" name="possuiDeficiencia" value="NÃO" required>
+                            <label for="deficienciaNao">NÃO</label>
+                        </div>
+                    </div>
+
+                    <div id="descricaoDeficienciaField" class="conditional-field" style="display: none;">
+                        <label for="descricaoDeficiencia">Descreva qual deficiência ou limitação possui</label>
+                        <input type="text" id="descricaoDeficiencia" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="nomeResponsavel" class="required">Nome do Responsável</label>
+                    <input type="text" id="nomeResponsavel" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="grauParentesco" class="required">Grau de Parentesco</label>
+                    <input type="text" id="grauParentesco" class="form-control" placeholder="Ex: Pai, Mãe, Avô, Tutor"
+                        required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        SALVAR CADASTRO
+                    </button>
+                    <button type="reset" class="btn btn-secondary">
+                        Limpar Formulário
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="footer">
+            <div class="footer-logos">
+                <img src="/img/logos_footer.png" alt="Logos Institucionais" class="logos-image">
+            </div>
+            <p>Secretaria de Assistência Social - Santo Amaro do Maranhão</p>
+            <p style="font-size: 0.9rem; margin-top: 5px;">© 2026 - Todos os direitos reservados</p>
+        </div>
+    </div>
+
+    <!-- Modal de Sucesso -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0; color: var(--success-color);">Cadastro Salvo!</h2>
+                <span class="btn-action btn-delete" onclick="closeModal()"
+                    style="cursor: pointer; border: none;">&times;</span>
+            </div>
+            <div class="modal-body" style="text-align: center; padding: 20px 0;">
+                <div style="font-size: 4rem; color: var(--success-color); margin-bottom: 20px;">✅</div>
+                <p style="font-size: 1.2rem; color: var(--dark); margin-bottom: 10px;">O cadastro foi realizado com
+                    sucesso!</p>
+                <p style="color: var(--gray);">O que deseja fazer agora?</p>
+            </div>
+            <div class="modal-footer" style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="printReceipt()"
+                    style="display: flex; align-items: center; gap: 8px;">
+                    🖨️ Imprimir Comprovante
+                </button>
+                <button class="btn"
+                    style="background-color: #25D366; color: white; display: flex; align-items: center; gap: 8px;"
+                    onclick="sendWhatsApp()">
+                    📱 Enviar no WhatsApp
+                </button>
+            </div>
+            <div style="text-align: center; margin-top: 15px;">
+                <a href="#" onclick="closeModal()"
+                    style="color: var(--primary-color); text-decoration: none; font-size: 0.9rem;">Realizar Novo
+                    Cadastro</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/form.js"></script>
+</body>
+
+</html>

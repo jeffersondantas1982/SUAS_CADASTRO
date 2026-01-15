@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Instalação - SCFV</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+        }
+
+        h3 {
+            color: #16a085;
+        }
+
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            color: #e83e8c;
+        }
+
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            overflow-x: auto;
+        }
+
+        .alert {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ffeeba;
+            margin-top: 20px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+
+            a {
+                text-decoration: none;
+                color: #000;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="no-print"
+        style="background: #e1f5fe; padding: 15px; border-radius: 5px; margin-bottom: 30px; border: 1px solid #b3e5fc; text-align: center;">
+        <strong>🖨️ Para Gerar o PDF:</strong> Pressione <kbd>Ctrl + P</kbd> e escolha "Salvar como PDF".
+    </div>
+
+    <h1>🛠️ Manual de Instalação - Windows</h1>
+    <p>Este guia passo-a-passo ajudará você a instalar e rodar o Sistema de Cadastro SCFV em um computador com Windows.
+    </p>
+
+    <h2>📋 Pré-requisitos</h2>
+    <p>Antes de começar, você precisa ter instalado no computador:</p>
+    <ul>
+        <li><strong>Node.js</strong> (Versão LTS recomendada)
+            <ul>
+                <li>Baixe aqui: <a href="https://nodejs.org/">https://nodejs.org/</a></li>
+                <li>Durante a instalação, clique em "Next" (Próximo) até finalizar. Não precisa mudar nenhuma
+                    configuração.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <hr>
+
+    <h2>🚀 Como Instalar</h2>
+    <p>Siga estes passos na primeira vez que colocar o sistema no computador:</p>
+
+    <h3>Passo 1: Preparar os arquivos</h3>
+    <ol>
+        <li>Baixe a pasta do projeto ou copie-a para a <strong>Área de Trabalho</strong> (Desktop).</li>
+        <li>Recomendamos que o nome da pasta seja <code>SUAS_CADASTRO</code>.</li>
+    </ol>
+
+    <h3>Passo 2: Instalar dependências</h3>
+    <ol>
+        <li>Abra a pasta <code>SUAS_CADASTRO</code>.</li>
+        <li>Encontre o arquivo chamado <strong><code>INSTALAR.BAT</code></strong> (pode aparecer apenas como
+            <code>INSTALAR</code>).</li>
+        <li>Dê um <strong>duplo clique</strong> nele.</li>
+        <li>Uma janela preta vai abrir e baixar as bibliotecas necessárias. Aguarde até aparecer "INSTALACAO CONCLUIDA"
+            e pressione qualquer tecla para fechar.</li>
+    </ol>
+
+    <hr>
+
+    <h2>▶️ Como Rodar o Sistema</h2>
+    <p>Sempre que quiser usar o sistema:</p>
+    <ol>
+        <li>Abra a pasta <code>SUAS_CADASTRO</code>.</li>
+        <li>Dê um duplo clique no arquivo <strong><code>START.BAT</code></strong> (ou <code>START</code>).</li>
+        <li>Uma janela preta vai abrir mostrando "Iniciando o Sistema SCFV...". <strong>Não feche essa janela</strong>,
+            ela é o servidor rodando.</li>
+        <li>O sistema estará disponível no seu navegador.</li>
+    </ol>
+
+    <hr>
+
+    <h2>🌐 Acessando o Sistema</h2>
+    <ol>
+        <li>Abra seu navegador preferido (Chrome, Edge, Firefox).</li>
+        <li>Na barra de endereços, digite:<br>
+            <strong><code>http://localhost:3000</code></strong>
+        </li>
+        <li>Pronto! Você verá a tela inicial.</li>
+    </ol>
+
+    <div class="alert">
+        <h3>⚠️ Solução de Problemas</h3>
+        <p><strong>Erro: "npm não é reconhecido..."</strong><br>
+            Isso significa que o Node.js não foi instalado corretamente. Baixe e instale novamente o Node.js do site
+            oficial e <strong>reinicie o computador</strong>.</p>
+
+        <p><strong>Janela preta fecha imediatamente ao clicar no START</strong><br>
+            Verifique se você já executou o <code>INSTALAR.BAT</code> antes.</p>
+
+        <p><strong>Erro: "EADDRINUSE: address already in use"</strong><br>
+            Isso significa que o sistema já está aberto em outra janela. Procure outra janela preta do Node.js aberta e
+            feche-a, ou apenas acesse o endereço no navegador.</p>
+    </div>
+
+    <div class="footer">
+        © 2026 - Secretaria de Assistência Social - Santo Amaro do Maranhão
+    </div>
+
+    <script>
+        // Auto-print prompt on load
+        window.onload = function () {
+            // setTimeout(function() { window.print(); }, 1000);
+        };
+    </script>
+</body>
+
+</html>

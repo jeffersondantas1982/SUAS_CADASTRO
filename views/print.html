@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Inscrição SCFV</title>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --gray: #64728b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark);
+            background: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .print-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            /* Reduzi padding */
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-main {
+            height: 60px;
+        }
+
+        .header-text h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .header-text p {
+            margin: 5px 0 0 0;
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        .registration-number {
+            text-align: right;
+        }
+
+        .number-box {
+            background: #f1f5f9;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px dashed var(--primary);
+        }
+
+        .number-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--gray);
+            font-weight: 700;
+        }
+
+        .number-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+        }
+
+        .section-title {
+            background: #f8fafc;
+            padding: 8px 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-left: 4px solid var(--primary);
+            margin: 25px 0 15px 0;
+            text-transform: uppercase;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .data-item {
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 5px;
+        }
+
+        .data-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            font-weight: 600;
+            display: block;
+        }
+
+        .data-value {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Rodapé Destacável */
+        .detachable-footer {
+            margin-top: 30px;
+            /* Reduzi margem */
+            border-top: 2px dashed #cbd5e1;
+            padding-top: 20px;
+            /* Reduzi padding */
+            position: relative;
+        }
+
+        .cut-line {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 0 10px;
+            font-size: 0.7rem;
+            /* Reduzi fonte */
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        .receipt-card {
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            /* Reduzi padding */
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .receipt-info h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .receipt-info p {
+            margin: 5px 0 0 0;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        /* Logos removidas do footer conforme solicitado */
+
+        @media print {
+            body {
+                padding: 0;
+            }
+
+            .print-container {
+                border: none;
+                padding: 0;
+                max-width: 100%;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+
+        .no-print-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 2000;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="no-print-btn no-print" onclick="window.print()">Imprimir Ficha (Ctrl + P)</button>
+
+    <div class="print-container" id="printArea">
+        <div class="header">
+            <div class="logo-section">
+                <img src="/img/logo_trans.png" alt="Logo" class="logo-main">
+                <div class="header-text">
+                    <h1>Ficha de Inscrição</h1>
+                    <p id="activityTitle">SCFV - Hitbox</p>
+                </div>
+            </div>
+            <div class="registration-number">
+                <div class="number-box">
+                    <span class="number-label">Inscrição Nº</span>
+                    <span class="number-value" id="regNumber">0000</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Dados do Aluno / Usuário</div>
+        <div class="data-grid" id="userData">
+            <!-- Dados preenchidos via JS -->
+        </div>
+
+        <div class="section-title">Dados de Contato e Sociais</div>
+        <div class="data-grid" id="socialData">
+            <!-- Dados preenchidos via JS -->
+        </div>
+
+        <div id="additionalDataContainer">
+            <!-- Campos específicos -->
+        </div>
+
+        <div style="margin-top: 40px; display: flex; justify-content: space-between;">
+            <div
+                style="width: 45%; border-top: 1px solid #000; text-align: center; padding-top: 5px; font-size: 0.8rem;">
+                Assinatura do Responsável
+            </div>
+            <div
+                style="width: 45%; border-top: 1px solid #000; text-align: center; padding-top: 5px; font-size: 0.8rem;">
+                Assinatura SCFV / Coordenação
+            </div>
+        </div>
+
+        <div class="detachable-footer">
+            <div class="cut-line">✂ Corte aqui para o comprovante</div>
+            <div class="receipt-card">
+                <div class="receipt-info">
+                    <h3>Comprovante de Inscrição SCFV</h3>
+                    <p>Referente ao cadastro de: <strong id="userNameReceipt">-</strong></p>
+                    <p>Atividade: <strong id="activityReceipt">-</strong></p>
+                    <p>Data: <strong id="dateReceipt">-</strong></p>
+                </div>
+                <div class="registration-number">
+                    <div class="number-box">
+                        <span class="number-label">Protocolo</span>
+                        <span class="number-value" id="regNumberReceipt">0000</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logos removidas -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const activity = params.get('activity');
+            const id = params.get('id');
+
+            if (!activity || !id) {
+                alert('Informações incompletas para impressão.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/cadastro/${activity}/${id}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    fillData(result.data, activity);
+                } else {
+                    alert('Erro ao carregar dados: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao conectar com o servidor');
+            }
+        });
+
+        function fillData(data, activity) {
+            // Títulos e Números
+            document.getElementById('activityTitle').innerText = 'SCFV - ' + (activity.charAt(0).toUpperCase() + activity.slice(1));
+            document.getElementById('regNumber').innerText = String(data.ID).padStart(4, '0');
+            document.getElementById('regNumberReceipt').innerText = String(data.ID).padStart(4, '0');
+            document.getElementById('userNameReceipt').innerText = data['Nome do Usuário'];
+            document.getElementById('activityReceipt').innerText = activity.charAt(0).toUpperCase() + activity.slice(1);
+            document.getElementById('dateReceipt').innerText = data['Data de Cadastro'] || new Date().toLocaleDateString('pt-BR');
+
+            // Grid de Dados Principal
+            const userData = {
+                'Nome Completo': data['Nome do Usuário'],
+                'Idade': data['Idade'],
+                'Data de Nascimento': data['Data de Nascimento'],
+                'RG': data['RG'],
+                'Data de Expedição': data['Data de Expedição'],
+                'CPF': data['CPF']
+            };
+
+            const socialData = {
+                'Email': data['Email'],
+                'Telefone': data['Telefone'],
+                'NIS': data['NIS'],
+                'Programa Social': data['Programa Social'],
+                'Descrição do Programa': data['Descrição Programa'],
+                'Possui Deficiência': data['Possui Deficiência']
+            };
+
+            injectGrid('userData', userData);
+            injectGrid('socialData', socialData);
+
+            // Campos Específicos
+            if (activity === 'hitbox' || activity === 'ballet' || activity === 'karate') {
+                const container = document.getElementById('additionalDataContainer');
+                container.innerHTML = '<div class="section-title">Dados Complementares / Responsável</div>';
+
+                const extraGrid = document.createElement('div');
+                extraGrid.className = 'data-grid';
+
+                const extraData = {
+                    'Responsável': data['Nome do Responsável'],
+                    'Parentesco': data['Grau de Parentesco']
+                };
+
+                if (activity === 'hitbox') {
+                    extraData['Tamanho da Camisa'] = data['Tamanho da Camisa'];
+                }
+
+                Object.entries(extraData).forEach(([label, value]) => {
+                    extraGrid.innerHTML += `
+                        <div class="data-item">
+                            <span class="data-label">${label}</span>
+                            <span class="data-value">${value || '-'}</span>
+                        </div>
+                    `;
+                });
+                container.appendChild(extraGrid);
+            }
+        }
+
+        function injectGrid(targetId, dataset) {
+            const container = document.getElementById(targetId);
+            Object.entries(dataset).forEach(([label, value]) => {
+                container.innerHTML += `
+                    <div class="data-item">
+                        <span class="data-label">${label}</span>
+                        <span class="data-value">${value || '-'}</span>
+                    </div>
+                `;
+            });
+        }
+    </script>
+</body>
+
+</html>

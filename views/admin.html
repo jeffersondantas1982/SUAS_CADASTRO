@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | SCFV</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container container-admin">
+        <a href="/" class="back-link">← Voltar para página inicial</a>
+
+        <div class="header">
+            <div class="header-content">
+                <img src="/img/logo_trans.png" alt="Logo SEMASCJ" class="header-logo">
+                <h1>Painel Administrativo</h1>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <p style="margin: 0;">Gerencie e visualize todos os cadastros do SCFV</p>
+                <div id="adminUserInfo" style="text-align: right;">
+                    <span id="adminUserDisplay" style="font-weight: 600; color: var(--primary-color);"></span>
+                    <button onclick="logoutAdmin()" class="btn btn-sm"
+                        style="background-color: #dc3545; color: white; margin-left: 10px; padding: 5px 10px; font-size: 0.8rem;">Sair</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-grid" id="statsRow">
+                <!-- Stats loaded dynamically -->
+            </div>
+            <div class="admin-actions-mini">
+                <button class="btn btn-primary" onclick="loadRegistrations()">🔄 Atualizar</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="changeTab('hitbox')">Hitbox</button>
+            <button class="tab-btn" onclick="changeTab('ballet')">Ballet</button>
+            <button class="tab-btn" onclick="changeTab('karate')">Karatê</button>
+            <button class="tab-btn" onclick="changeTab('idosos')">Grupo de Idosos</button>
+            <button class="tab-btn" onclick="changeTab('funcional')">Treino Funcional</button>
+            <button class="btn btn-secondary" id="usersTabBtn"
+                onclick="window.open('/views/users.html', 'Gerenciar Usuários', 'width=800,height=700'); return false;"
+                style="display: none; margin-left: auto;">👥 Gerenciar Usuários</button>
+        </div>
+
+        <div class="actions">
+            <input type="text" id="searchInput" class="form-control search-box"
+                placeholder="Buscar por nome, CPF, email...">
+            <button class="btn btn-secondary" onclick="downloadExcel()">Baixar Excel Completo</button>
+        </div>
+
+        <div class="table-container" id="tableContainer">
+            <div class="loading-state" style="text-align: center; padding: 40px;">
+                <span class="loading"></span>
+                <p>Carregando cadastros...</p>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="footer-logos">
+                <img src="/img/logos_footer.png" alt="Logos Institucionais" class="logos-image">
+            </div>
+            <p>Secretaria de Assistência Social - Santo Amaro do Maranhão</p>
+            <p style="font-size: 0.9rem; margin-top: 5px;">© 2026 - Todos os direitos reservados</p>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Cadastro</h2>
+                <span class="close-modal" onclick="closeEditModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editId">
+                    <div id="formFieldsContainer">
+                        <!-- Campos injetados dinamicamente -->
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-block">Salvar Alterações</button>
+                            <button type="button" class="btn btn-secondary btn-block"
+                                onclick="closeEditModal()">Cancelar</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals de usuários removidos (migrados para users.html) -->
+
+
+    <style>
+        .close-modal {
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+    </style>
+    <script>
+        // CRITICAL: Error Handler in separate script to catch parse errors
+        window.onerror = function (msg, url, line, col, error) {
+            alert("⚠️ ERRO CRÍTICO JS:\n" + msg + "\nLinha: " + line);
+            return false;
+        };
+        console.log("✅ Error handler installed.");
+    </script>
+
+    <script>
+        console.log("🚀 Main script starting...");
+
+        let currentActivity = 'hitbox';
+        let allRegistrations = [];
+        let currentUser = null;
+
+        async function checkAdminAuth() {
+            try {
+                const response = await fetch('/api/me');
+                const result = await response.json();
+                if (!result.success) {
+                    window.location.href = '/login';
+                    return;
+                }
+                currentUser = result.user;
+                document.getElementById('adminUserDisplay').textContent = `${currentUser.username} (${currentUser.role})`;
+
+                if (currentUser.role === 'admin') {
+                    document.getElementById('usersTabBtn').style.display = 'inline-block';
+                }
+            } catch (error) {
+                window.location.href = '/login';
+            }
+        }
+
+        async function logoutAdmin() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/login';
+        }
+
+        async function loadStatistics() {
+            try {
+                const response = await fetch('/api/estatisticas');
+                const result = await response.json();
+
+                if (result.success) {
+                    const stats = result.data;
+                    document.getElementById('statsRow').innerHTML = `
+            <div class="stat-item">
+                <span class="stat-number">${stats.total}</span>
+                <span class="stat-label">Total</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">${stats.hitbox}</span>
+                <span class="stat-label">Hitbox</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">${stats.ballet}</span>
+                <span class="stat-label">Ballet</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">${stats.karate}</span>
+                <span class="stat-label">Karatê</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">${stats.idosos}</span>
+                <span class="stat-label">Idosos</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">${stats.funcional}</span>
+                <span class="stat-label">Funcional</span>
+            </div>
+            `;
+                }
+            } catch (error) {
+                console.error('Erro ao carregar estatísticas:', error);
+            }
+        }
+
+        async function loadRegistrations() {
+            const container = document.getElementById('tableContainer');
+            container.innerHTML = '<div style="text-align: center; padding: 40px;"><span class="loading"></span><p>Carregando cadastros...</p></div>';
+
+            try {
+                const activity = currentActivity.charAt(0).toUpperCase() + currentActivity.slice(1);
+                const response = await fetch(`/api/cadastros/${activity}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    allRegistrations = result.data;
+                    displayRegistrations(allRegistrations);
+                    loadStatistics();
+                } else {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">!</div><p>Erro ao carregar cadastros</p></div>';
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✕</div><p>Erro ao conectar com o servidor</p></div>';
+            }
+        }
+
+        function displayRegistrations(data) {
+            const container = document.getElementById('tableContainer');
+
+            if (!data || data.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">−</div>
+                        <h3>Nenhum cadastro encontrado</h3>
+                        <p>Ainda não há inscrições para esta atividade.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const headers = Object.keys(data[0]);
+            let tableHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        ${headers.map(header => `<th>${header}</th>`).join('')}
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    `;
+
+            data.forEach(row => {
+                tableHTML += '<tr>';
+                headers.forEach(header => {
+                    let value = row[header];
+
+                    if (header === 'Programa Social' || header === 'Possui Deficiência') {
+                        value = value === 'SIM'
+                            ? '<span class="badge badge-success">SIM</span>'
+                            : '<span class="badge badge-danger">NÃO</span>';
+                    }
+
+                    tableHTML += `<td>${value !== null && value !== undefined ? value : '-'}</td>`;
+                });
+
+                // Botões de Ação
+                tableHTML += `
+                    <td>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn btn-action btn-print" onclick="printRegistration('${row.ID}')" title="Imprimir Ficha">🖨️</button>
+                            <button class="btn btn-action btn-edit" onclick="openEditModal('${row.ID}')" title="Editar">✏️</button>
+                            ${currentUser.role === 'admin' ?
+                        `<button class="btn btn-action btn-delete" onclick="deleteRegistration('${row.ID}')" title="Excluir">🗑️</button>` :
+                        ''}
+                        </div>
+                    </td>
+                    `;
+                tableHTML += '</tr>';
+            });
+
+            tableHTML += '</tbody></table>';
+            container.innerHTML = tableHTML;
+        }
+
+        async function deleteRegistration(id) {
+            if (!confirm('Você tem certeza que deseja excluir este cadastro? Esta ação não pode ser desfeita.')) return;
+
+            try {
+                const response = await fetch(`/api/cadastro/${currentActivity}/${id}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Cadastro excluído com sucesso!');
+                    loadRegistrations();
+                } else {
+                    alert('Erro ao excluir: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao conectar com o servidor');
+            }
+        }
+
+        function printRegistration(id) {
+            window.open(`/views/print.html?activity=${currentActivity}&id=${id}`, '_blank');
+        }
+
+        function openEditModal(id) {
+            const registration = allRegistrations.find(r => String(r.ID) === String(id));
+            if (!registration) return;
+
+            document.getElementById('editId').value = id;
+            const container = document.getElementById('formFieldsContainer');
+            container.innerHTML = '';
+
+            // Gerar campos baseados no cabeçalho (pulando ID e Data de Cadastro)
+            const fieldsToSkip = ['ID', 'Data de Cadastro'];
+
+            Object.keys(registration).forEach(key => {
+                if (fieldsToSkip.includes(key)) return;
+
+                const value = registration[key];
+                const div = document.createElement('div');
+                div.className = 'form-group';
+
+                let inputHtml = '';
+                if (key === 'Programa Social' || key === 'Possui Deficiência') {
+                    inputHtml = `
+                        <select id="edit_${key}" class="form-control">
+                            <option value="SIM" ${value === 'SIM' ? 'selected' : ''}>SIM</option>
+                            <option value="NÃO" ${value === 'NÃO' ? 'selected' : ''}>NÃO</option>
+                        </select>
+                    `;
+                } else {
+                    inputHtml = `<input type="text" id="edit_${key}" class="form-control" value="${value || ''}">`;
+                }
+
+                div.innerHTML = `
+                    <label>${key}</label>
+                    ${inputHtml}
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editId').value;
+            const registration = allRegistrations.find(r => String(r.ID) === String(id));
+            if (!registration) return;
+
+            const updatedData = {};
+            const fieldsToSkip = ['ID', 'Data de Cadastro'];
+
+            // Mapeamento de chaves amigáveis para chaves do backend (se necessário)
+            // No nosso caso as chaves da tabela coincidem com as que o servidor espera ou podem ser mapeadas
+
+            // Vamos coletar os dados dos campos gerados
+            const mapping = {
+                'Email': 'email',
+                'Nome do Usuário': 'nome',
+                'Idade': 'idade',
+                'RG': 'rg',
+                'Data de Expedição': 'dataExpedicao',
+                'Data de Nascimento': 'dataNascimento',
+                'CPF': 'cpf',
+                'NIS': 'nis',
+                'Telefone': 'telefone',
+                'Programa Social': 'programaSocial',
+                'Descrição Programa': 'descricaoPrograma',
+                'Possui Deficiência': 'possuiDeficiencia',
+                'Descrição Deficiência': 'descricaoDeficiencia',
+                'Nome do Responsável': 'nomeResponsavel',
+                'Grau de Parentesco': 'grauParentesco',
+                'Tamanho da Camisa': 'tamanhoCamisa'
+            };
+
+            Object.keys(registration).forEach(key => {
+                if (fieldsToSkip.includes(key)) return;
+                const backendKey = mapping[key] || key;
+                updatedData[backendKey] = document.getElementById(`edit_${key}`).value;
+            });
+
+            try {
+                const response = await fetch(`/api/cadastro/${currentActivity}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedData)
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Cadastro atualizado com sucesso!');
+                    closeEditModal();
+                    loadRegistrations();
+                } else {
+                    alert('Erro ao atualizar: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao conectar com o servidor');
+            }
+        });
+
+        function changeTab(activity) {
+            currentActivity = activity;
+
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            // Como users n tem target, usamos logica
+            if (activity === 'users') {
+                document.getElementById('usersTabBtn').classList.add('active');
+                loadUsers();
+            } else {
+                // Encontrar o btn correto
+                const btns = Array.from(document.querySelectorAll('.tab-btn'));
+                const btn = btns.find(b => b.getAttribute('onclick')?.includes(activity));
+                if (btn) btn.classList.add('active');
+                loadRegistrations();
+            }
+        }
+
+        async function loadUsers() {
+            // Deprecated - Moved to users.html
+        }
+
+        // Funções de gerenciamento de usuários movidas para users.html
+
+        function downloadExcel() {
+            window.location.href = '/api/download';
+        }
+
+        // Busca
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+
+            if (!searchTerm) {
+                displayRegistrations(allRegistrations);
+                return;
+            }
+
+            const filtered = allRegistrations.filter(reg => {
+                return Object.values(reg).some(value =>
+                    value && value.toString().toLowerCase().includes(searchTerm)
+                );
+            });
+
+            displayRegistrations(filtered);
+        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("⚡ DOMContentLoaded - Initializing...");
+            checkAdminAuth().then(() => {
+                loadStatistics();
+                loadRegistrations();
+            });
+        });
+        console.log("🏁 Main script parsed successfully.");
+        // alert("Sistema de Admin Carregado!"); // Confirmação de carga
+    </script>
+</body>
+
+</html>

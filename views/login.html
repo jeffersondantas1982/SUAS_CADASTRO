@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SCFV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .login-title {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-login:hover {
+            background: var(--primary-hover);
+        }
+
+        .error-msg {
+            color: #dc3545;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card">
+        <img src="/img/logo_trans.png" alt="Logo" class="login-logo">
+        <h2 class="login-title">Acesso Restrito</h2>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" class="form-control" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn-login">Entrar</button>
+            <p id="errorMsg" class="error-msg">Usuário ou senha inválidos</p>
+        </form>
+    </div>
+
+    <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    localStorage.setItem('user', JSON.stringify({ username: result.username, role: result.role }));
+                    window.location.href = '/';
+                } else {
+                    errorMsg.style.display = 'block';
+                    errorMsg.textContent = result.message;
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = 'Erro de conexão';
+            }
+        }
+    </script>
+</body>
+
+</html>

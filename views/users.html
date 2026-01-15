@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Usuários | SCFV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        .close {
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header" style="margin-bottom: 20px;">
+            <h1>Gerenciamento de Usuários</h1>
+            <p>Adicione, edite ou remova acessos ao sistema.</p>
+        </div>
+
+        <div class="actions" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <a href="/views/admin.html" class="btn btn-secondary">← Voltar ao Painel</a>
+            <button class="btn btn-primary" onclick="openNewUserModal()">+ Novo Usuário</button>
+        </div>
+
+        <div class="card">
+            <div id="usersList">Carregando usuários...</div>
+        </div>
+    </div>
+
+    <!-- Modal Novo Usuário -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('userModal')">&times;</span>
+            <h2>Novo Usuário</h2>
+            <form id="newUserForm" onsubmit="createUser(event)">
+                <div class="form-group">
+                    <label>Usuário</label>
+                    <input type="text" id="newUsername" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Senha</label>
+                    <input type="password" id="newPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Perfil</label>
+                    <select id="newRole" class="form-control">
+                        <option value="operador">Operador</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Criar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Editar Usuário -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editUserModal')">&times;</span>
+            <h2>Editar Usuário</h2>
+            <form id="editUserForm" onsubmit="updateUser(event)">
+                <input type="hidden" id="originalUsername">
+                <div class="form-group">
+                    <label>Usuário</label>
+                    <input type="text" id="editUsername" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Nova Senha (deixe em branco para manter)</label>
+                    <input type="password" id="editPassword" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Perfil</label>
+                    <select id="editRole" class="form-control">
+                        <option value="operador">Operador</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Funções de Modal
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+        function openNewUserModal() {
+            document.getElementById('newUserForm').reset();
+            document.getElementById('userModal').style.display = 'block';
+        }
+        function openEditUserModal(username, role) {
+            document.getElementById('originalUsername').value = username;
+            document.getElementById('editUsername').value = username;
+            document.getElementById('editRole').value = role;
+            document.getElementById('editPassword').value = '';
+            document.getElementById('editUserModal').style.display = 'block';
+        }
+
+        // API
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const result = await response.json();
+
+                if (result.success) {
+                    let html = '<table class="table" style="width:100%"><thead><tr><th>Usuário</th><th>Perfil</th><th>Ações</th></tr></thead><tbody>';
+                    result.data.forEach(u => {
+                        html += `
+                            <tr>
+                                <td>${u.username}</td>
+                                <td>${u.role}</td>
+                                <td>
+                                    <button class="btn btn-action btn-edit" onclick="openEditUserModal('${u.username}', '${u.role}')" title="Editar">✏️</button>
+                                </td>
+                            </tr>`;
+                    });
+                    html += '</tbody></table>';
+                    document.getElementById('usersList').innerHTML = html;
+                } else {
+                    document.getElementById('usersList').innerHTML = '<p class="alert alert-danger">Erro ao carregar (Não autorizado?)</p>';
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('usersList').innerHTML = '<p>Erro de conexão.</p>';
+            }
+        }
+
+        async function createUser(event) {
+            event.preventDefault();
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+            const role = document.getElementById('newRole').value;
+
+            try {
+                const response = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, role })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Usuário criado!');
+                    closeModal('userModal');
+                    loadUsers();
+                } else {
+                    alert('Erro: ' + result.message);
+                }
+            } catch (e) { alert('Erro de conexão'); }
+        }
+
+        async function updateUser(event) {
+            event.preventDefault();
+            const originalUsername = document.getElementById('originalUsername').value;
+            const newUsername = document.getElementById('editUsername').value;
+            const password = document.getElementById('editPassword').value;
+            const role = document.getElementById('editRole').value;
+
+            try {
+                const response = await fetch(`/api/users/${originalUsername}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ newUsername, password, role })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Usuário atualizado!');
+                    closeModal('editUserModal');
+                    loadUsers();
+                } else {
+                    alert('Erro: ' + result.message);
+                }
+            } catch (e) { alert('Erro de conexão'); }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', loadUsers);
+    </script>
+</body>
+
+</html>

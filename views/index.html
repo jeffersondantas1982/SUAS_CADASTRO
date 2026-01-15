@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCFV - Sistema de Cadastro</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div id="authCheck" style="display: none;"></div>
+    <div class="container">
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                <div class="header-content">
+                    <img src="/img/logo_trans.png" alt="Logo SEMASCJ" class="header-logo">
+                    <h1>SCFV - Santo Amaro do Maranhão</h1>
+                </div>
+                <div id="userInfo" style="display: none; text-align: right;">
+                    <p style="margin: 0; font-weight: 600; color: var(--primary-color);">Olá, <span
+                            id="userNameDisplay">Usuário</span></p>
+                    <span id="userRoleDisplay" class="badge"
+                        style="background-color: var(--secondary-color); font-size: 0.7rem; color: white;">Perfil</span>
+                    <button onclick="logout()"
+                        style="display: block; margin-top: 5px; background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.9rem; margin-left: auto;">Sair</button>
+                </div>
+            </div>
+            <p>Sistema de Cadastro - Serviço de Convivência e Fortalecimento de Vínculos</p>
+        </div>
+
+        <div class="stats-section">
+            <div class="stats-grid" id="statsContainer">
+                <div class="stat-item">
+                    <span class="stat-number">-</span>
+                    <span class="stat-label">Total</span>
+                </div>
+            </div>
+            <a href="/views/admin.html" class="admin-link">Painel Administrativo</a>
+        </div>
+
+        <div class="activities-grid">
+            <a href="/views/hitbox.html" class="activity-card card-hitbox">
+                <h3>Hitbox</h3>
+                <p>Cadastro para aulas de Hitbox. Desenvolva condicionamento físico e disciplina.</p>
+                <div class="btn btn-primary btn-block">Fazer Inscrição</div>
+            </a>
+
+            <a href="/views/ballet.html" class="activity-card card-ballet">
+                <h3>Ballet</h3>
+                <p>Cadastro para aulas de Ballet. Arte, expressão corporal e coordenação motora.</p>
+                <div class="btn btn-primary btn-block">Fazer Inscrição</div>
+            </a>
+
+            <a href="/views/karate.html" class="activity-card card-karate">
+                <h3>Karatê</h3>
+                <p>Cadastro para aulas de Karatê. Artes marciais, disciplina e autodefesa.</p>
+                <div class="btn btn-primary btn-block">Fazer Inscrição</div>
+            </a>
+
+            <a href="/views/idosos.html" class="activity-card card-idosos">
+                <h3>Grupo de Idosos</h3>
+                <p>Atividades para a terceira idade. Convivência, saúde e qualidade de vida.</p>
+                <div class="btn btn-primary btn-block">Fazer Inscrição</div>
+            </a>
+
+            <a href="/views/funcional.html" class="activity-card card-funcional">
+                <h3>Treino Funcional</h3>
+                <p>Exercícios funcionais para melhorar força, flexibilidade e resistência.</p>
+                <div class="btn btn-primary btn-block">Fazer Inscrição</div>
+            </a>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logos">
+                <img src="/img/logos_footer.png"
+                    alt="Logos Institucionais - SEMASCJ, CRAS, SCFV e Prefeitura de Santo Amaro do Maranhão"
+                    class="logos-image">
+            </div>
+            <p>Secretaria de Assistência Social - Santo Amaro do Maranhão</p>
+            <div style="margin: 10px 0;">
+                <a href="#" onclick="openAboutModal()"
+                    style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Sobre o Sistema</a>
+            </div>
+            <p style="font-size: 0.9rem; margin-top: 5px;">© 2026 - Todos os direitos reservados</p>
+        </div>
+    </div>
+
+    <!-- Modal Sobre -->
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 style="margin: 0; color: var(--primary-color);">Sobre o Sistema</h2>
+                <span class="btn-action btn-delete" onclick="closeAboutModal()"
+                    style="cursor: pointer; border: none;">&times;</span>
+            </div>
+            <div class="modal-body" style="padding: 20px 0;">
+                <p style="color: var(--dark); line-height: 1.6; margin-bottom: 20px;">
+                    Este sistema foi desenvolvido para modernizar e agilizar os processos de cadastro e gestão do
+                    Serviço de Convivência e Fortalecimento de Vínculos (SCFV) de Santo Amaro do Maranhão, garantindo
+                    maior eficiência e controle dos dados.
+                </p>
+
+                <h3
+                    style="color: var(--dark); margin-bottom: 15px; font-size: 1.1rem; border-bottom: 2px solid var(--light-gray); padding-bottom: 5px;">
+                    Créditos de Desenvolvimento</h3>
+
+                <div style="margin-bottom: 15px;">
+                    <strong style="display: block; color: var(--primary-color);">Jefferson Carvalho Dantas</strong>
+                    <span style="color: var(--gray); font-size: 0.9rem; display: block;">Assessor Técnico de
+                        Planejamento</span>
+                    <span style="color: var(--gray); font-size: 0.9rem;">Responsável pelo Desenvolvimento do
+                        Sistema</span>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <strong style="display: block; color: var(--primary-color);">Jean Castro</strong>
+                    <span style="color: var(--gray); font-size: 0.9rem;">Secretário de Assistência Social / Levantamento
+                        de Requisitos</span>
+                </div>
+
+                <h3
+                    style="color: var(--dark); margin-bottom: 15px; font-size: 1.1rem; border-bottom: 2px solid var(--light-gray); padding-bottom: 5px;">
+                    Tecnologias Utilizadas</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                    <span class="badge" style="background: #e2e8f0; color: #475569;">Node.js</span>
+                    <span class="badge" style="background: #e2e8f0; color: #475569;">Express</span>
+                    <span class="badge" style="background: #e2e8f0; color: #475569;">ExcelJS</span>
+                    <span class="badge" style="background: #e2e8f0; color: #475569;">HTML5 & CSS3</span>
+                    <span class="badge" style="background: #e2e8f0; color: #475569;">JavaScript</span>
+                </div>
+
+                <div
+                    style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--light-gray); text-align: center;">
+                    <p style="font-size: 0.85rem; color: var(--gray);">
+                        Licenciado sob <strong style="color: var(--primary-color);">MIT Open Source License</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openAboutModal() {
+            document.getElementById('aboutModal').style.display = 'block';
+        }
+
+        function closeAboutModal() {
+            document.getElementById('aboutModal').style.display = 'none';
+        }
+
+        // Fechar ao clicar fora
+        window.onclick = function (event) {
+            const modal = document.getElementById('aboutModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        async function loadStatistics() {
+            try {
+                // Verificar autenticação
+                const responseAuth = await fetch('/api/me');
+                const authResult = await responseAuth.json();
+
+                if (!authResult.success) {
+                    window.location.href = '/login';
+                    return;
+                }
+
+                // Mostrar Info do Usuário
+                const user = authResult.user;
+                document.getElementById('userNameDisplay').textContent = user.username.charAt(0).toUpperCase() + user.username.slice(1);
+                document.getElementById('userRoleDisplay').textContent = user.role === 'admin' ? 'Administrador' : 'Operador';
+                document.getElementById('userInfo').style.display = 'block';
+
+                const response = await fetch('/api/estatisticas');
+                const result = await response.json();
+
+                if (result.success) {
+                    const stats = result.data;
+                    const container = document.getElementById('statsContainer');
+
+                    container.innerHTML = `
+                        <div class="stat-item">
+                            <span class="stat-number">${stats.total}</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">${stats.hitbox}</span>
+                            <span class="stat-label">Hitbox</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">${stats.ballet}</span>
+                            <span class="stat-label">Ballet</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">${stats.karate}</span>
+                            <span class="stat-label">Karatê</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">${stats.idosos}</span>
+                            <span class="stat-label">Idosos</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">${stats.funcional}</span>
+                            <span class="stat-label">Funcional</span>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Erro ao carregar estatísticas:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadStatistics);
+
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+    </script>
+</body>
+
+</html>
